@@ -39,22 +39,24 @@ function isAtGoal(a, b) {
 }
 
 function moveTowardsGoal(goal, current) {
-  var diffX = goal.x - current.x;
-  var diffY = goal.y - current.y;
-  var abs = Math.abs;
-
-  if (abs(diffX) > abs(diffY)) {
-    if (diffY > 0) {
-      return DIRECTIONS.SOUTH;
-    }
-    return DIRECTIONS.NORTH;
-  }
+  var diffX = goal.x - current.x,
+      diffY = goal.y - current.y;
 
   if (diffX > 0) {
     return DIRECTIONS.EAST;
   }
-  return DIRECTIONS.WEST;
+  if (diffX < 0) {
+    return DIRECTIONS.WEST;
+  }
+  
+  if (diffY > 0) {
+    return DIRECTIONS.SOUTH;
+  }
+  if (diffY < 0) {
+    return DIRECTIONS.NORTH;
+  }
 
+  throw new Error("Already at goal. Can not move.");
 }
 
 var locationGoal;
