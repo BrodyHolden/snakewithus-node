@@ -2,6 +2,10 @@ var restify = require('restify');
 var routes  = require('./routes');
 
 var server = restify.createServer();
+server.on('uncaughtException', function(request, response, route, error) {
+  console.log('ERROR', error.stack);
+}); 
+
 
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
