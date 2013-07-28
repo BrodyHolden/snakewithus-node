@@ -5,6 +5,14 @@ var DIRECTIONS = {
   WEST: 'w'
 };
 
+
+function getBorders(board) {
+  return {
+    width:  board[0].length,
+    height: board.length
+  };
+}
+
 function getPosition(snakes, id, segment) {
   var i, me, len = snakes.length;
 
@@ -21,10 +29,17 @@ function getPosition(snakes, id, segment) {
   throw new Error("We are not in the game! Do I exist?");
 }
 
-function pickLocation() {
+function pickLocation(location, border) {
+  if ((location.x == 1) && (location.y == 1)) {
+    return {
+      x: border.width  - 2,
+      y: border.height - 2
+    };
+  }
+
   return {
-    x: 2,
-    y: 2
+    x: 1,
+    y: 1
   };
 }
 
@@ -65,16 +80,19 @@ var locationGoal;
 /** PUT YOUR LOGIC HERE **/
 exports.nextMove = function(board, snakes, id) {
   if (!locationGoal) {
-    locationGoal = pickLocation();
+    locationGoal = pickLocation({}, {});
   }
 
   var currentLocation = getPosition(snakes, id, 0);
+  var isAtLocation = isAtGoal(locationGoal, currentLocation);
 
-  console.log("Current location: ", currentLocation);
+  console.log("location: ", currentLocation, " | goal: ", locationGoal, " | isAtLocation: ", isAtLocation);
+  console.log("border: ", getBorders(board));
 
   // Pick new location.
-  if (isAtGoal(locationGoal, currentLocation)) {
-    locationGoal = pickLocation();
+  if (isAtLocation) {
+    locationGoal = pickLocation(currentLocation, getBorders(board));
+    console.log("new location: ", locationGoal, " | board: ", getBorders(board));
   }
 
   // Move there.
