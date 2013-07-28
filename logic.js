@@ -13,24 +13,36 @@ function getBorders(board) {
   };
 }
 
-function getPosition(snakes, id, segment) {
-  var i, me, len = snakes.length;
+function getSnakeIndex(snakes, id) {
+  var i, len = snakes.length;
 
   for (i = 0; i < len; i++) {
     if (snakes[i].id === id) {
-      me = snakes[i];
-      return {
-        x: me.queue[segment][0],
-        y: me.queue[segment][1]
-      };
+      return i;
     }
   }
 
   throw new Error("We are not in the game! Do I exist?");
 }
 
+function getPosition(snakes, id, segment) {
+  var me = snakes[getSnakeIndex(snakes, id)];
+
+  return {
+    x: me.queue[segment][0],
+    y: me.queue[segment][1]
+  };
+}
+
+function getHeadPosition(snakes, id) {
+  var index = getSnakeIndex(snakes, id),
+      segments = snakes[index].queue.length;
+
+  return getPosition(snakes, id, segments - 1);
+}
+
 function pickLocation(location, border) {
-  if ((location.x == 1) && (location.y == 1)) {
+  if ((location.x === 1) && (location.y === 1)) {
     return {
       x: border.width  - 2,
       y: border.height - 2
@@ -54,8 +66,10 @@ function isAtGoal(a, b) {
 }
 
 function moveTowardsGoal(goal, current) {
-  var diffX = goal.x - current.x,
-      diffY = goal.y - current.y;
+  var diffX, diffY;
+
+  diffX = goal.x - current.x;
+  diffY = goal.y - current.y;
 
   if (diffX > 0) {
     return DIRECTIONS.EAST;
@@ -63,7 +77,7 @@ function moveTowardsGoal(goal, current) {
   if (diffX < 0) {
     return DIRECTIONS.WEST;
   }
-  
+
   if (diffY > 0) {
     return DIRECTIONS.SOUTH;
   }
@@ -83,7 +97,7 @@ exports.nextMove = function(board, snakes, id) {
     locationGoal = pickLocation({}, {});
   }
 
-  var currentLocation = getPosition(snakes, id, 0);
+  var currentLocation = getHeadPosition(snakes, id);
   var isAtLocation = isAtGoal(locationGoal, currentLocation);
 
   console.log("location: ", currentLocation, " | goal: ", locationGoal, " | isAtLocation: ", isAtLocation);
