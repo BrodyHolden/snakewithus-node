@@ -71,7 +71,7 @@ exports.tick = function(req, res, next) {
 
   var data = {
     message: '',
-    move: logic.nextMove(board, snakes)
+    move: logic.nextMove(board, snakes, playerID)
   };
 
   res.json(data);
