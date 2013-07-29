@@ -16,7 +16,7 @@ var logic = require('./logic');
 exports.register = function(req, res, next) {
   console.log('REGISTER: ', req.body);
   var data = {
-    name: 'My Name',
+    name: 'B.U.B.',
     head_img_url: 'http://www.dseffects.com/iphone/games/HungrySnake/m'
   };
 
