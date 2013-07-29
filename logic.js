@@ -112,3 +112,4 @@ exports.nextMove = function(board, snakes, id) {
   // Move there.
   return moveTowardsGoal(locationGoal, currentLocation);
 };
+
