@@ -34,6 +34,44 @@ function getPosition(snakes, id, segment) {
   };
 }
 
+function getFoodPosition(board, border, pos) {
+  var entity, container, x, y, height;
+
+  for (x in board) {
+    if (! board.hasOwnProperty(x)) {
+      continue;
+    }
+
+    height = board[x];
+
+    for (y in height) {
+      if (! height.hasOwnProperty(y)) {
+        continue;
+      }
+
+      container = height[y];
+
+      if (! container.hasOwnProperty(0)) {
+        continue;
+      }
+
+      entity = container[0];
+
+      console.log("getFoodPosition: ", entity);
+      if (entity.type === "food") {
+        console.log("getFoodPosition() is food. x:", x, " y:", y);
+        return {
+          x: y,
+          y: x
+        }
+      }
+    }
+    
+  }
+
+  return false;
+}
+
 function getHeadPosition(snakes, id) {
   var index = getSnakeIndex(snakes, id),
       segments = snakes[index].queue.length;
@@ -56,10 +94,10 @@ function pickLocation(location, border) {
 }
 
 function isAtGoal(a, b) {
-  if (a.x !== b.x) {
+  if (a.x != b.x) {
     return false;
   }
-  if (a.y !== b.y) {
+  if (a.y != b.y) {
     return false;
   }
   return true;
@@ -101,11 +139,13 @@ exports.nextMove = function(board, snakes, id) {
   var isAtLocation = isAtGoal(locationGoal, currentLocation);
 
   console.log("location: ", currentLocation, " | goal: ", locationGoal, " | isAtLocation: ", isAtLocation);
-  console.log("border: ", getBorders(board));
 
   // Pick new location.
   if (isAtLocation) {
-    locationGoal = pickLocation(currentLocation, getBorders(board));
+    locationGoal = getFoodPosition(board, getBorders(board), currentLocation);
+    if (locationGoal === false) {
+      locationGoal = pickLocation(currentLocation, getBorders(board));
+    }
     console.log("new location: ", locationGoal, " | board: ", getBorders(board));
   }
 
