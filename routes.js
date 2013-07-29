@@ -41,6 +41,15 @@ exports.end = function(req, res, next) {
   res.json({ });
 };
 
+function produceTaunt(turn, gameName) {
+  if (turn === 0) {
+    return gameName.replace( /.+-(.+)/ig, function (all, lasthalf) {
+      return all + "? More like dumb-" + lasthalf + ".";
+    });
+  }
+  return '';
+}
+
 /**
  * EXPECT: {
  *  game_id: "<SOME_ID>",
@@ -69,8 +78,11 @@ exports.tick = function(req, res, next) {
 
   console.log('TICK '+playerID);
 
+  var message = produceTaunt(body.turn_num, body.id);
+  console.log("Message: ", message);
+
   var data = {
-    message: '',
+    message: message,
     move: logic.nextMove(board, snakes, playerID)
   };
 
