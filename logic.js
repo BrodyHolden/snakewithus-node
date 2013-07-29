@@ -128,6 +128,17 @@ function moveTowardsGoal(goal, current) {
 
 var locationGoal;
 
+function hasEveryoneElseDied(snakes, id) {
+  var i;
+  for (i = 0; i < snakes.length; i++) {
+    if (snakes[i].id !== id) {
+      if (snakes[i].status === "alive") {
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 /** PUT YOUR LOGIC HERE **/
 exports.nextMove = function(board, snakes, id) {
@@ -142,7 +153,10 @@ exports.nextMove = function(board, snakes, id) {
 
   // Pick new location.
   if (isAtLocation) {
-    locationGoal = getFoodPosition(board, getBorders(board), currentLocation);
+    locationGoal = false;
+    if (hasEveryoneElseDied(snakes, id)) {
+      locationGoal = getFoodPosition(board, getBorders(board), currentLocation);
+    }
     if (locationGoal === false) {
       locationGoal = pickLocation(currentLocation, getBorders(board));
     }
